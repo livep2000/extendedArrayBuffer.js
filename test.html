@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Test extendeArrayBuffer.js</title>
+    <script  src="js/extendedArrayBuffer.js"></script>
+</head>
+<body onload="start();">
+    <script>
+
+	   // create extended, sanboxed ArrayBuffer
+	   // Set anything into this buffer arraybuffer, string, int8, uint8, int16, uint16, int32 or uint32
+	   // at any BYTE position in that buffer
+	   // Extract anything from the buffer from any BYTE position
+	   // No traces of the prototyped instance
+
+
+	   function start()													// only works after the DOM is loaded,
+		  {
+		  var sourceBuffer = newExtendedArrayBuffer(50);						// create the sandboxed extendedArrayBuffer
+
+		  try
+			 {
+			 var test1 = new extendedArrayBuffer(100);
+			 console.log("Bommer! It still exists....");
+			 }
+		  catch(e )
+			 {
+			 console.log("Ok!, extendedarrayBuffer is not in the global scope (anymore)");
+			 }
+		 
+					   // set normal array ------------------------------------------------------------------------------------------
+		  var randomData = [];  										    // create some random data to work with
+		  for (var i=0; i< sourceBuffer.byteLength;i++)
+			 {
+			 randomData[i] = Math.floor(Math.random()*255);
+			 }
+		  sourceBuffer.setUint8( randomData, 0 );						    // first example: any normal array can be used as (U)Int(8,16,32)array to set in sourcebuffer, start writing at pos 0
+		  console.log( new Uint8Array(sourceBuffer ) );					    // show result
+
+				     // set Uint8Array --------------------------------------------------------------------------------------------
+		  var uint8randomData = new Uint8Array(sourceBuffer.byteLength) ;	    // create some random data in a Uint8array
+		  for (var i=0; i< sourceBuffer.byteLength;i++)
+			 {
+			 uint8randomData[i] = Math.floor(Math.random()*255);
+			 }
+		  sourceBuffer.setUint8( uint8randomData, 0 );					    // Set an Uint8array into the sourcebuffer, start writing at pos 0
+		  console.log( new Uint8Array(sourceBuffer ) );					    // show result
+    
+				    // set a string ----------------------------------------------------------------------------------------------
+		  var testStr = "Some text in string";
+		  sourceBuffer.setString(testStr, 10);							    // write string from at 10, to the length of the string
+		  console.log( new Uint8Array(sourceBuffer ) );
+
+				    // extract string --------------------------------------------------------------------------------------------
+		  var extractedStr = sourceBuffer.getString(  10 ,testStr.length);	    // from pos 10 to the length to read
+		  console.log("extracted string : " + extractedStr );
+
+				    // how about int16 ? ----------------------------------------------------------------------------------------
+		  sourceBuffer.setInt16([-1000, 1000,-2000,2000,-3,3,-4,4,-5,5], 3);	    // write at pos 3
+		  var result = sourceBuffer.getInt16( 3,2 )  ;					    // read 2 int16 from position 3
+		  console.log(result);
+		
+				    // Test Uint16 ? ----------------------------------------------------------------------------------------
+		  sourceBuffer.setUint16([500, 1000,1500,2000,2500,3000], 3);		    // write at pos 3
+		  var result = sourceBuffer.getUint16( 3,3 )  ;					    // read 3 uint16 from position 3
+		  console.log(result);
+		  
+				    // Test Int32 ? ----------------------------------------------------------------------------------------
+		  sourceBuffer.setInt32([-500, 65540, -65540,2000,2500,3000], 1);	    // write at pos 3
+		  var result = sourceBuffer.getInt32( 1,3 )  ;					    // read 3 int32 from position 1
+		  console.log(result);
+
+				    // Test Uint32 ? ----------------------------------------------------------------------------------------
+				    // if the result hase 1 member, it's not an array, only that mamber
+		  sourceBuffer.setUint32([65541, 65542,1000,2000,2500,3000], 1);		    // write at pos 3
+		  sourceBuffer.setUint32(600, 1);								    // write again a single value at pos 1
+		  var result = sourceBuffer.getUint32( 1,1 )  ;					    // read 1 uint32 from position 1
+		  console.log(result);
+		  
+				    // last test, can we define another extendedArrayBuffer ??
+
+		  var another = newExtendedArrayBuffer(8);
+		  another.setInt32( -65550 );									    // write at pos 0
+		  var result = another.getInt32( 0,1 )  ;						    // read it back
+		  console.log(result);										    // working !
+		  	
+		  }
+
+    </script>
+
+</body>
+</html>
