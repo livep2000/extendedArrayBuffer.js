@@ -108,89 +108,105 @@ var newExtendedArrayBuffer = function(byteLength)
 	// Set string in source
 	extendedArrayBuffer.prototype.setString = function( str, writePosition ) 
 		{
-		var dv = new DataView( this );			
-		for (var i=0, strLen=str.length; i<strLen; i++) 
+		var dv = new DataView( this );
+		var i = 0;
+		for (i=0, strLen=str.length; i<strLen; i++) 
 			{
 			dv.setUint8(writePosition, str.charCodeAt(i), true);
 			writePosition += 1;
 			}
+		return i;
 		};
 	// combine arraybuffer with arraybuffer
 	extendedArrayBuffer.prototype.setArrayBuffer = function( bufferToCombine, writePosition )
 		{
 		var dv = new DataView( this );
 		var source = new Uint8Array(bufferToCombine);
-		for (var i = 0; i<source.length;i++)
+		var i = 0;
+		for (i = 0; i<source.length;i++)
 			{
 			dv.setUint8(writePosition, source[i], true);
 			writePosition += 1;
 			}
+		return i;
 		};
 	// combine arraybuffer with uint8array
 	extendedArrayBuffer.prototype.setUint8 = function( bufferToCombine, writePosition )
 	 	{
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
-		for (var i = 0; i<bufferToCombine.length;i++)
+		var i = 0;
+		for (i = 0; i<bufferToCombine.length;i++)
 			{
 			dv.setUint8(writePosition, bufferToCombine[i], true);
 			writePosition += 1;
 			}
+		return i;
 		};
 	// combine arraybuffer with uint16array
 	extendedArrayBuffer.prototype.setUint16 = function( bufferToCombine, writePosition )
 		{ 
 		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );	
-		for (var i = 0; i<bufferToCombine.length;i++)
+		var dv = new DataView( this );
+		var i = 0;
+		for (i = 0; i<bufferToCombine.length;i++)
 			{
 			dv.setUint16(writePosition, bufferToCombine[i], true);
 			writePosition += 2;
 			}
+		return (i * 2);
 		};
 	// combine arraybuffer with uint32array
 	extendedArrayBuffer.prototype.setUint32 = function( bufferToCombine, writePosition )
 		{
 		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );	
-		for (var i = 0; i<bufferToCombine.length;i++)
+		var dv = new DataView( this );
+		var i = 0;
+		for (i = 0; i<bufferToCombine.length;i++)
 			{
 			dv.setUint32(writePosition, bufferToCombine[i], true);
 			writePosition += 4;
 			}
+		return (i * 4);
 		};
 	// combine arraybuffer with uint8array
 	extendedArrayBuffer.prototype.setInt8 = function( bufferToCombine, writePosition )
 		{
 		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );	
-		for (var i = 0; i<bufferToCombine.length;i++)
+		var dv = new DataView( this );
+		var i = 0;
+		for (i = 0; i<bufferToCombine.length;i++)
 			{
 			dv.setInt8(writePosition, bufferToCombine[i], true);
 			writePosition += 1;
 			}
+		return i;
 		};
 	// combine arraybuffer with uint16array
 	extendedArrayBuffer.prototype.setInt16 = function( bufferToCombine, writePosition )
 		{ 
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
-		for (var i = 0; i<bufferToCombine.length;i++)
+		var i = 0;
+		for (i = 0; i<bufferToCombine.length;i++)
 			{
 			dv.setInt16(writePosition, bufferToCombine[i], true);
 			writePosition += 2;
 			}
+		return (i * 2);
 		};
 	// combine arraybuffer with uint32array
 	extendedArrayBuffer.prototype.setInt32 = function( bufferToCombine, writePosition )
 		{
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
-		for (var i = 0; i<bufferToCombine.length;i++)
+		var i = 0;
+		for (i = 0; i<bufferToCombine.length;i++)
 			{
 			dv.setInt32(writePosition, bufferToCombine[i], true);
 			writePosition += 4;
 			}
+		return (i * 4);
 		};
 	// return a new initiated instance of extendedArrayBuffer
 	var toreturn = new window.extendedArrayBuffer( byteLength );
