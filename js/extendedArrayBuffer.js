@@ -2,8 +2,8 @@
 // Destroy all that was needed, except the extendedArrayBuffer
 
 var newExtendedArrayBuffer = function(byteLength)
-	{
-	var sandBoxNative = function( original, sandboxed )			//	 This one is quit nifty thanks Dean Edwards
+	{			//This one is quit nifty thanks Dean Edwards
+	var sandBoxNative = function( original, sandboxed )
 		{
 		var iframe = document.createElement("iframe");
 		iframe.style.display= "none";
@@ -15,9 +15,9 @@ var newExtendedArrayBuffer = function(byteLength)
 		frames[frames.length - 1].document.write("<script>parent." + sandboxed + " = "+ original +";<\/script>");
 		document.body.removeChild(iframe);
 		}
-
+	// create sandboxed extendedArrayBuffer from native ArrayBuffer
 	sandBoxNative("ArrayBuffer", "extendedArrayBuffer");
-
+	// Recycled function: retrieves Int8Array part of source ArrayBuffer
 	var getInt8Part = function(buffer, byteOffset, length, bytesPerInteger)
 		{
 		var src8 = new Int8Array( buffer, byteOffset, length * bytesPerInteger)
@@ -25,7 +25,7 @@ var newExtendedArrayBuffer = function(byteLength)
 		dst8.set(src8);
 		return ( dst8.buffer );
 		}
-
+	// Recycled function: retrieve UintArray part of source ArrayBuffer
 	var getUint8Part = function(buffer, byteOffset, length, bytesPerInteger)
 		{
 		var srcU8 = new Uint8Array( buffer, byteOffset, length * bytesPerInteger)
@@ -33,7 +33,7 @@ var newExtendedArrayBuffer = function(byteLength)
 		dstU8.set(srcU8);
 		return ( dstU8.buffer );
 		}
-	
+	// If Array hase 1 memeber, return only the member, else the array
 	var returnSingle = function(input)
 		{
 		if (input.length === 1)
@@ -42,7 +42,7 @@ var newExtendedArrayBuffer = function(byteLength)
 			}
 		else {return input; }
 		}
-
+	// If input is only a number, return array with 1 member
 	var acceptSingle = function (input)
 		{
 		if ( typeof(input) === "number" )
@@ -54,7 +54,7 @@ var newExtendedArrayBuffer = function(byteLength)
 			return ( input );
 			}
 		}
-
+	// Get string from source
 	extendedArrayBuffer.prototype.getString = function( byteOffset, byteLength) 
 		{
 		var buf = new Uint8Array( this, byteOffset, byteLength)
@@ -71,41 +71,41 @@ var newExtendedArrayBuffer = function(byteLength)
 			}
 		return (str);
 		};
-
+	// Get Uint8array from source
 	extendedArrayBuffer.prototype.getUint8 = function( byteOffset, byteLength) 
 		{
 		return returnSingle(  new Uint8Array( this, byteOffset, byteLength) );
 		};
-
+	// Get Int8Array from source
 	extendedArrayBuffer.prototype.getInt8 = function(byteOffset, byteLength) 
 		{
 		return returnSingle( new Int8Array( this, byteOffset, byteLength) );
 		};
-
-	extendedArrayBuffer.prototype.getUint16 = function(byteOffset, length) // nr of uint 16  
+	// Get Uint16Array from source
+	extendedArrayBuffer.prototype.getUint16 = function(byteOffset, length) 
 		{
 		var dstU8buffer = getUint8Part(this, byteOffset, length, 2);
 		return returnSingle( new Uint16Array( dstU8buffer, 0, length ));
 		};
-
-	extendedArrayBuffer.prototype.getInt16 = function(byteOffset, length) // nr of uint 16  
+	// Get Int16Array from source
+	extendedArrayBuffer.prototype.getInt16 = function(byteOffset, length) 
 		{
 		var dst8buffer = getInt8Part(this, byteOffset, length, 2);
 		return returnSingle( new Int16Array( dst8buffer, 0, length ));
 		};
-
+	// Get Uint32Array from source
 	extendedArrayBuffer.prototype.getUint32 = function(byteOffset , length)
 		{
 		var dstU8buffer = getUint8Part(this, byteOffset, length, 4);
 		return returnSingle( new Uint32Array( dstU8buffer, 0, length ));
 		};
-
-	extendedArrayBuffer.prototype.getInt32 = function(byteOffset , length) // nr of uint 32  
+	// Get Int32Array from source
+	extendedArrayBuffer.prototype.getInt32 = function(byteOffset , length)
 		{
 		var dst8buffer = getInt8Part(this, byteOffset, length, 4);
 		return returnSingle( new Int32Array( dst8buffer, 0, length ));
 		};
-
+	// Set string in source
 	extendedArrayBuffer.prototype.setString = function( str, writePosition ) 
 		{
 		var dv = new DataView( this );			
@@ -115,8 +115,8 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 1;
 			}
 		};
-
-	extendedArrayBuffer.prototype.setArrayBuffer = function( bufferToCombine, writePosition )	// combine arraybuffer with arraybuffer
+	// combine arraybuffer with arraybuffer
+	extendedArrayBuffer.prototype.setArrayBuffer = function( bufferToCombine, writePosition )
 		{
 		var dv = new DataView( this );
 		var source = new Uint8Array(bufferToCombine);
@@ -126,9 +126,9 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 1;
 			}
 		};
-
-	extendedArrayBuffer.prototype.setUint8 = function( bufferToCombine, writePosition )	// combine arraybuffer with uint8array
-		{
+	// combine arraybuffer with uint8array
+	extendedArrayBuffer.prototype.setUint8 = function( bufferToCombine, writePosition )
+	 	{
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
 		for (var i = 0; i<bufferToCombine.length;i++)
@@ -137,8 +137,8 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 1;
 			}
 		};
-
-	extendedArrayBuffer.prototype.setUint16 = function( bufferToCombine, writePosition )	// combine arraybuffer with uint16array
+	// combine arraybuffer with uint16array
+	extendedArrayBuffer.prototype.setUint16 = function( bufferToCombine, writePosition )
 		{ 
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
@@ -148,8 +148,8 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 2;
 			}
 		};
-
-	extendedArrayBuffer.prototype.setUint32 = function( bufferToCombine, writePosition )	// combine arraybuffer with uint32array
+	// combine arraybuffer with uint32array
+	extendedArrayBuffer.prototype.setUint32 = function( bufferToCombine, writePosition )
 		{
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
@@ -159,8 +159,8 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 4;
 			}
 		};
-
-	extendedArrayBuffer.prototype.setInt8 = function( bufferToCombine, writePosition )	// combine arraybuffer with uint8array
+	// combine arraybuffer with uint8array
+	extendedArrayBuffer.prototype.setInt8 = function( bufferToCombine, writePosition )
 		{
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
@@ -170,8 +170,8 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 1;
 			}
 		};
-
-	extendedArrayBuffer.prototype.setInt16 = function( bufferToCombine, writePosition )	// combine arraybuffer with uint16array
+	// combine arraybuffer with uint16array
+	extendedArrayBuffer.prototype.setInt16 = function( bufferToCombine, writePosition )
 		{ 
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
@@ -181,8 +181,8 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 2;
 			}
 		};
-
-	extendedArrayBuffer.prototype.setInt32 = function( bufferToCombine, writePosition )	// combine arraybuffer with uint32array
+	// combine arraybuffer with uint32array
+	extendedArrayBuffer.prototype.setInt32 = function( bufferToCombine, writePosition )
 		{
 		bufferToCombine = acceptSingle(bufferToCombine);
 		var dv = new DataView( this );	
@@ -192,11 +192,11 @@ var newExtendedArrayBuffer = function(byteLength)
 			writePosition += 4;
 			}
 		};
-
-	var toreturn = new window.extendedArrayBuffer( byteLength );			// return a new initiated instance of extendedArrayBuffer
-	window.extendedArrayBuffer = null;										// destroy it 
-	delete(window.extendedArrayBuffer);										// detelete it, whatever (not necessary :)
-	return toreturn;														// return the original
+	// return a new initiated instance of extendedArrayBuffer
+	var toreturn = new window.extendedArrayBuffer( byteLength );
+	window.extendedArrayBuffer = null;	// destroy it 
+	delete(window.extendedArrayBuffer);	// detelete it, whatever (not necessary :)
+	return toreturn;			// return the original
 
 	}; // createExtendedArrayBuffer
 	
