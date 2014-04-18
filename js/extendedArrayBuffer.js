@@ -128,7 +128,7 @@ var newExtendedArrayBuffer = function(byteLength)
 	// combine arraybuffer with uint8array
 	extendedArrayBuffer.prototype.setUint8 = function( bufferToCombine, writePosition )
 	 	{
-		bufferToCombine = acceptSingle(bufferToCombine);
+		bufferToCombine = new Uint8Array( acceptSingle(bufferToCombine) );
 		var dstU8 = new Uint8Array( this );
 		dstU8.set(bufferToCombine, writePosition);
 		return bufferToCombine.byteLength;
@@ -152,7 +152,7 @@ var newExtendedArrayBuffer = function(byteLength)
 	// combine arraybuffer with uint8array
 	extendedArrayBuffer.prototype.setInt8 = function( bufferToCombine, writePosition )
 		{
-		bufferToCombine = aInt8Array( acceptSingle(bufferToCombine) );
+		bufferToCombine = new Int8Array( acceptSingle(bufferToCombine) );
 		var dst8 = new Int8Array( this );
 		dst8.set(bufferToCombine, writePosition);
 		return bufferToCombine.byteLength;
