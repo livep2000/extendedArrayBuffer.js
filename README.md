@@ -89,3 +89,13 @@ If the length of the result == 1, then it returnes only the value.
 newBuffer = sourceBuffer.getUint16( 3, 1 );
 For example can give : 2000 (only the Uint value of byte 3 & 4) 
 ```
+
+Update 18-4-2014
+
+The setters are completely rewritten. The original version used de DataView object to itterate the data into the source buffer. Some benchmarking showed that a 150Mb getUint8 could ben done in < 1 Ms.
+
+The same action getUint8 timed about 1600 Ms.
+
+I found the proper way tho swap around array's in memory, resulting in <100 Ms.
+
+In de 'examples' folder added some benchmark tests and a real life example, creating wave audio from scratch.
