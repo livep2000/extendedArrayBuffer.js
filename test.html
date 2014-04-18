@@ -74,15 +74,19 @@
 				    // if the result hase 1 member, it's not an array, only that mamber
 		  sourceBuffer.setUint32([65541, 65542,1000,2000,2500,3000], 1);		    // write at pos 3
 		  sourceBuffer.setUint32(600, 1);								    // write again a single value at pos 1
+
+		 
+		  var result = sourceBuffer.getUint32( 5,2 )  ;					    // read 2 uint32 from position 5
+		  console.log(result);
+			 
 		  var result = sourceBuffer.getUint32( 1,1 )  ;					    // read 1 uint32 from position 1
 		  console.log(result);
-		  
-				    // last test, can we define another extendedArrayBuffer ??
+		 // last test, can we define another extendedArrayBuffer ??
 
-		  var another = newExtendedArrayBuffer(8);
-		  another.setInt32( -65550 );									    // write at pos 0
-		  var result = another.getInt32( 0,1 )  ;						    // read it back
-		  console.log(result);										    // working !
+		 // var another = newExtendedArrayBuffer(8);
+		  //another.setInt32( -65550 );									    // write at pos 0
+		  //var result = another.getInt32( 0,1 )  ;						    // read it back
+		  //console.log(result);										    // working !
 		  	
 		  }
 

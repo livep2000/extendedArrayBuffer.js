@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Test extendeArrayBuffer.js</title>
+    <script  src="../js/extendedArrayBuffer.js"></script>
+</head>
+<body onload="start();">
+    <script>
+
+    // Measuring time in Ms
+    function start()
+	   {
+	   var s1 = new StopWatch();
+	   var size = 150 * 1024 * 1024;					   // 150 Mb
+	  
+	   var exampleBuffer = new Uint8Array(size);			   // Create some raw sampledata
+	   var i = 0;
+	   s1.Start(); 
+	   while (i<(size)) 
+		  { 
+		  exampleBuffer[i++] = 128+Math.round(127*Math.sin(i/200));
+		  }
+	   s1.Stop();
+	   console.log( "Sample data " + size  + " bytes created in " + s1.ElapsedMilliseconds + " Ms.");
+
+
+	   var sourceBuffer = newExtendedArrayBuffer(size);		   // write test
+
+	   s1 = new StopWatch();
+	   s1.Start();        	   
+	   var bytesWritten = sourceBuffer.setUint8( exampleBuffer, 0);	  
+	   s1.Stop();
+	   console.log( "Write Uint8 in " + s1.ElapsedMilliseconds + " Ms.");
+
+	   var Uint16ExampleBuffer = new Uint16Array( size /2);
+	   while (i<(size /2)) 
+		  { 
+		  Uint16ExampleBuffer[i++] = 128+Math.round(127*Math.sin(i/200)) *255;
+		  }
+
+	   s1 = new StopWatch();
+	   s1.Start();        	   
+	   var bytesWritten = sourceBuffer.setUint16( Uint16ExampleBuffer, 0);	  
+	   s1.Stop();
+	   console.log( "Write Uint16 in " + s1.ElapsedMilliseconds + " Ms.");
+
+	   var Uint32ExampleBuffer = new Uint32Array( size /4);
+	   while (i<(size /4)) 
+		  { 
+		  Uint32ExampleBuffer[i++] = 128+Math.round(127*Math.sin(i/200)) * 1024;
+		  }
+	  s1 = new StopWatch();
+	  console.log("Start writing to buffer....");
+	  s1.Start();        	   
+	  var bytesWritten = sourceBuffer.setUint32( Uint32ExampleBuffer , 0);	  
+	  s1.Stop();
+	  console.log( "Write Uint32 in " + s1.ElapsedMilliseconds + " Ms.");
+
+	  // tests
+	  s1 = new StopWatch(); s1.Start();        	   
+	  var destinationBuffer = sourceBuffer.getUint8( 0 , size ); 
+	  s1.Stop();
+	  console.log( "Read Uint8 ready in " + s1.ElapsedMilliseconds + " Ms.");
+
+	  s1 = new StopWatch(); s1.Start();        	   
+	  var destinationBuffer = sourceBuffer.getInt8( 0 , size ); 
+	  s1.Stop();
+	  console.log( "Read Int8 ready in " + s1.ElapsedMilliseconds + " Ms.");
+
+	  s1 = new StopWatch(); s1.Start();        	   
+	  var destinationBuffer = sourceBuffer.getUint16( 0 , size /2 ); 
+	  s1.Stop();
+	  console.log( "Read Uint16 ready in " + s1.ElapsedMilliseconds + " Ms.");
+
+	  s1 = new StopWatch(); s1.Start();        	   
+	  var destinationBuffer = sourceBuffer.getInt16( 0 , size /2 ); 
+	  s1.Stop();
+	  console.log( "Read Int16 ready in " + s1.ElapsedMilliseconds + " Ms.");
+
+	  s1 = new StopWatch(); s1.Start();        	   
+	  var destinationBuffer = sourceBuffer.getUint32( 0 , size /4 ); 
+	  s1.Stop();
+	  console.log( "Read Uint32 ready in " + s1.ElapsedMilliseconds + " Ms.");
+
+	  s1 = new StopWatch(); s1.Start();        	   
+	  var destinationBuffer = sourceBuffer.getInt32( 0 , size /4 ); 
+	  s1.Stop();
+	  console.log( "Read Int32 ready in " + s1.ElapsedMilliseconds + " Ms.");
+
+	   }
+
+
+    StopWatch = function(){this.StartMilliseconds = 0;this.ElapsedMilliseconds = 0;}  
+    StopWatch.prototype.Start = function(){this.StartMilliseconds = new Date().getTime();}
+    StopWatch.prototype.Stop = function(){this.ElapsedMilliseconds = new Date().getTime() - this.StartMilliseconds;}
+    </script>
+
+</body>
+</html>

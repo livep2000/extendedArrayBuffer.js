@@ -120,93 +120,58 @@ var newExtendedArrayBuffer = function(byteLength)
 	// combine arraybuffer with arraybuffer
 	extendedArrayBuffer.prototype.setArrayBuffer = function( bufferToCombine, writePosition )
 		{
-		var dv = new DataView( this );
-		var source = new Uint8Array(bufferToCombine);
-		var i = 0;
-		for (i = 0; i<source.length;i++)
-			{
-			dv.setUint8(writePosition, source[i], true);
-			writePosition += 1;
-			}
-		return i;
+		bufferToCombine = Uint8Array(bufferToCombine);
+		var dstU8 = new Uint8Array( this );
+		dstU8.set(bufferToCombine, writePosition);
+		return bufferToCombine.byteLength;
 		};
 	// combine arraybuffer with uint8array
 	extendedArrayBuffer.prototype.setUint8 = function( bufferToCombine, writePosition )
 	 	{
 		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );	
-		var i = 0;
-		for (i = 0; i<bufferToCombine.length;i++)
-			{
-			dv.setUint8(writePosition, bufferToCombine[i], true);
-			writePosition += 1;
-			}
-		return i;
+		var dstU8 = new Uint8Array( this );
+		dstU8.set(bufferToCombine, writePosition);
+		return bufferToCombine.byteLength;
 		};
 	// combine arraybuffer with uint16array
 	extendedArrayBuffer.prototype.setUint16 = function( bufferToCombine, writePosition )
 		{ 
-		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );
-		var i = 0;
-		for (i = 0; i<bufferToCombine.length;i++)
-			{
-			dv.setUint16(writePosition, bufferToCombine[i], true);
-			writePosition += 2;
-			}
-		return (i * 2);
+		bufferToCombine = new Uint16Array( acceptSingle(bufferToCombine) );
+		var dstU8 = new Uint8Array( this );	
+		dstU8.set(new Uint8Array( bufferToCombine.buffer), writePosition);
+		return bufferToCombine.byteLength;
 		};
 	// combine arraybuffer with uint32array
 	extendedArrayBuffer.prototype.setUint32 = function( bufferToCombine, writePosition )
 		{
-		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );
-		var i = 0;
-		for (i = 0; i<bufferToCombine.length;i++)
-			{
-			dv.setUint32(writePosition, bufferToCombine[i], true);
-			writePosition += 4;
-			}
-		return (i * 4);
+		bufferToCombine = new Uint32Array( acceptSingle(bufferToCombine) );
+		var dstU8 = new Uint8Array( this );	
+		dstU8.set(new Uint8Array( bufferToCombine.buffer), writePosition);
+		return bufferToCombine.byteLength;
 		};
 	// combine arraybuffer with uint8array
 	extendedArrayBuffer.prototype.setInt8 = function( bufferToCombine, writePosition )
 		{
-		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );
-		var i = 0;
-		for (i = 0; i<bufferToCombine.length;i++)
-			{
-			dv.setInt8(writePosition, bufferToCombine[i], true);
-			writePosition += 1;
-			}
-		return i;
+		bufferToCombine = aInt8Array( acceptSingle(bufferToCombine) );
+		var dst8 = new Int8Array( this );
+		dst8.set(bufferToCombine, writePosition);
+		return bufferToCombine.byteLength;
 		};
 	// combine arraybuffer with uint16array
 	extendedArrayBuffer.prototype.setInt16 = function( bufferToCombine, writePosition )
 		{ 
-		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );	
-		var i = 0;
-		for (i = 0; i<bufferToCombine.length;i++)
-			{
-			dv.setInt16(writePosition, bufferToCombine[i], true);
-			writePosition += 2;
-			}
-		return (i * 2);
+		bufferToCombine = new Int16Array( acceptSingle(bufferToCombine) );
+		var dst8 = new Int8Array( this );	
+		dst8.set(new Int8Array( bufferToCombine.buffer), writePosition);
+		return bufferToCombine.byteLength;
 		};
 	// combine arraybuffer with uint32array
 	extendedArrayBuffer.prototype.setInt32 = function( bufferToCombine, writePosition )
 		{
-		bufferToCombine = acceptSingle(bufferToCombine);
-		var dv = new DataView( this );	
-		var i = 0;
-		for (i = 0; i<bufferToCombine.length;i++)
-			{
-			dv.setInt32(writePosition, bufferToCombine[i], true);
-			writePosition += 4;
-			}
-		return (i * 4);
+		bufferToCombine = new Int32Array( acceptSingle(bufferToCombine) );
+		var dst8 = new Int8Array( this );	
+		dst8.set(new Int8Array( bufferToCombine.buffer), writePosition);
+		return bufferToCombine.byteLength;
 		};
 	// return a new initiated instance of extendedArrayBuffer
 	var toreturn = new window.extendedArrayBuffer( byteLength );

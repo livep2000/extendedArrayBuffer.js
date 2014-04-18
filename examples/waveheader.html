@@ -29,7 +29,7 @@
 		  {
 		  console.log("ready");
 		  console.log("buffer len = " + (( waveBuffer.byteLength / 1024)/1024) );
-		  playBuffer(waveBuffer);
+		 // playBuffer(waveBuffer);
 		  });
 
 	   }
@@ -51,7 +51,7 @@
 		b = waveBuffer.setString('WAVE', p);			p +=b;  // Format
 		b = waveBuffer.setString('fmt ', p);			p +=b;  // Subchunk1ID
 		b = waveBuffer.setUint32([16], p );			p +=b;  // Subchunk1Size
-		b = waveBuffer.setUint16([1], p);			p +=b;  // AudioFormat
+		b = waveBuffer.setUint16([1], p);				p +=b;  // AudioFormat
 		b = waveBuffer.setUint16([numChannels], p);		p +=b;  // NumChannels
 		b = waveBuffer.setUint32([sampleRate], p);		p +=b;  // SampleRate
 		b = waveBuffer.setUint32([byteRate],p);			p +=b;  // ByteRate
