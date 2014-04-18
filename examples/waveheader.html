@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Test extendeArrayBuffer.js</title>
+    <script  src="../js/extendedArrayBuffer.js"></script>
+</head>
+<body onload="start();">
+    <script>
+    // real life example: create wave header, add to the raw wave data en play it
+    // example of sequential writing into extendedArrayByffer
+    function start()
+	   {
+	   var options =				// format wavedata
+		  {
+		  numChannels		: 2,		// stereo
+		  sampleRate		: 44100,	// high quality
+		  bytesPerSample	: 2		// 16 bit samples
+		  }
+
+	   var rawWaveData = new Uint8Array(400000);				   // Create some raw sampledata
+	   var i = 0;
+	   while (i<200000) 
+		  { 
+		  rawWaveData[i++] = 128+Math.round(127*Math.sin(i/10));  // left speaker
+		  rawWaveData[i++] = 128+Math.round(127*Math.sin(i/200)); // right speaker
+		  }
+	   console.log("start");
+	   attachWaveHeader (options, rawWaveData, function ( waveBuffer ) // start creating the wavebuffer
+		  {
+		  console.log("ready");
+		  console.log("buffer len = " + (( waveBuffer.byteLength / 1024)/1024) );
+		  playBuffer(waveBuffer);
+		  });
+
+	   }
+
+	var attachWaveHeader = function ( options, rawBuffer, callback ) 
+		{
+		var numChannels = options.numChannels || 1;				  // save config
+		var sampleRate = options.sampleRate || 11025;
+		var bytesPerSample = options.bytesPerSample || 2;
+		var blockAlign = numChannels * bytesPerSample;
+		var byteRate = sampleRate * blockAlign;
+		var dataSize = rawBuffer.byteLength;
+
+		var waveBuffer = newExtendedArrayBuffer(44 + dataSize);	  // header + data
+
+		var b = 0,p = 0;									  // sequential write the wave header
+		b = waveBuffer.setString('RIFF', p);			    p +=b;  // ChunkID
+		b = waveBuffer.setUint32([dataSize + 36], p );	    p +=b;  // ChunkSize
+		b = waveBuffer.setString('WAVE', p);			    p +=b;  // Format
+		b = waveBuffer.setString('fmt ', p);			    p +=b;  // Subchunk1ID
+		b = waveBuffer.setUint32([16], p );			    p +=b;  // Subchunk1Size
+		b = waveBuffer.setUint16([1], p);				    p +=b;  // AudioFormat
+		b = waveBuffer.setUint16([numChannels], p);		    p +=b;  // NumChannels
+		b = waveBuffer.setUint32([sampleRate], p);		    p +=b;  // SampleRate
+		b = waveBuffer.setUint32([byteRate],p);			    p +=b;  // ByteRate
+		b = waveBuffer.setUint16([blockAlign],p);		    p +=b;  // BlockAlign
+		b = waveBuffer.setUint16([bytesPerSample * 8],p);	    p +=b;  // BitsPerSample
+		b = waveBuffer.setString('data', p);			    p +=b;  // Subchunk2ID
+		b = waveBuffer.setUint32([dataSize], p);		    p +=b;  // Subchunk2Size
+		b = waveBuffer.setUint8(rawBuffer, p , dataSize - p); p +=b;  // Then the actual wave data		
+		callback ( waveBuffer );
+		};
+
+    var playBuffer = function (wavebuffer)
+	   {
+	   var context;
+	   try {
+		  window.AudioContext = window.AudioContext||window.webkitAudioContext||window.msAudioContext;
+		  context = new AudioContext();
+		  }
+	   catch(e) { console.log('Try another browser please...'); }
+
+	   context.decodeAudioData( wavebuffer, function( audioBuffer ) 
+		  {
+		  var source = context.createBufferSource();
+		  source.buffer = audioBuffer 		
+		  source.connect( context.destination );
+		  source.start( context.currentTime );
+		  console.log("Listen to the tone.")
+		  });
+
+	   }
+    </script>
+
+</body>
+</html>
