@@ -84,20 +84,11 @@ var newExtendedArrayBuffer = function(byteLength)
 		return str.length;
 		};
 
-	extendedArrayBuffer.prototype.setString2 = function( str, writePosition ) 
+	// get arraybuffer from arraybuffer
+	extendedArrayBuffer.prototype.getArrayBuffer = function( byteOffset, byteLength )
 		{
-		var bufView = new Uint16Array( this );
-		var cnt =0;
-		for (var i=0, strLen=str.length; i<strLen; i+=2) 
-			{
-			bufView[cnt] =   str.charCodeAt(i +1) * str.charCodeAt(i);
-			console.log(bufView[cnt]);
-			cnt +=1;
-			}
-		return str.length;
+		return ( getUint8Part(this, byteOffset,byteLength,1) );
 		};
-
-
 	// Get Uint8array from source
 	extendedArrayBuffer.prototype.getUint8 = function( byteOffset, byteLength) 
 		{
