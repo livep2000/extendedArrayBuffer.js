@@ -62,6 +62,7 @@ var newExtendedArrayBuffer = function(byteLength)
 		var ab = new Uint16Array( buf );
 		var abLen = ab.length;
 		var CHUNK_SIZE = Math.pow(2, 16);
+		console.log("chunk size = " + CHUNK_SIZE);
 		var offset, len, subab;
 		for (offset = 0; offset < abLen; offset += CHUNK_SIZE) 
 			{
@@ -71,6 +72,32 @@ var newExtendedArrayBuffer = function(byteLength)
 			}
 		return (str);
 		};
+
+	// Set string in source
+	extendedArrayBuffer.prototype.setString = function( str, writePosition ) 
+		{
+		var bufView = new Uint8Array( this );
+		for (var i=0, strLen=str.length; i<strLen; i++) 
+			{
+			bufView[i + writePosition] = str.charCodeAt(i);
+			}
+		return str.length;
+		};
+
+	extendedArrayBuffer.prototype.setString2 = function( str, writePosition ) 
+		{
+		var bufView = new Uint16Array( this );
+		var cnt =0;
+		for (var i=0, strLen=str.length; i<strLen; i+=2) 
+			{
+			bufView[cnt] =   str.charCodeAt(i +1) * str.charCodeAt(i);
+			console.log(bufView[cnt]);
+			cnt +=1;
+			}
+		return str.length;
+		};
+
+
 	// Get Uint8array from source
 	extendedArrayBuffer.prototype.getUint8 = function( byteOffset, byteLength) 
 		{
@@ -104,18 +131,6 @@ var newExtendedArrayBuffer = function(byteLength)
 		{
 		var dst8buffer = getInt8Part(this, byteOffset, length, 4);
 		return returnSingle( new Int32Array( dst8buffer, 0, length ));
-		};
-	// Set string in source
-	extendedArrayBuffer.prototype.setString = function( str, writePosition ) 
-		{
-		var dv = new DataView( this );
-		var i = 0;
-		for (i=0, strLen=str.length; i<strLen; i++) 
-			{
-			dv.setUint8(writePosition, str.charCodeAt(i), true);
-			writePosition += 1;
-			}
-		return i;
 		};
 	// combine arraybuffer with arraybuffer
 	extendedArrayBuffer.prototype.setArrayBuffer = function( bufferToCombine, writePosition )

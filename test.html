@@ -16,7 +16,7 @@
 
 	   function start()													// only works after the DOM is loaded,
 		  {
-		  var sourceBuffer = newExtendedArrayBuffer(50);						// create the sandboxed extendedArrayBuffer
+		  var sourceBuffer = newExtendedArrayBuffer(400);						// create the sandboxed extendedArrayBuffer
 
 		  try
 			 {
@@ -47,8 +47,10 @@
 		  console.log( new Uint8Array(sourceBuffer ) );					    // show result
     
 				    // set a string ----------------------------------------------------------------------------------------------
-		  var testStr = "Some text in string";
-		  sourceBuffer.setString(testStr, 10);							    // write string from at 10, to the length of the string
+		  var testStr = "create extended, sanboxed ArrayBuffer\nSet anything into this buffer arraybuffer, string, int8, uint8, int16, uint16, int32 or uint32\nat any BYTE position in that buffer\nExtract anything from the buffer from any BYTE position\n No traces of the prototyped instance";
+		  //var testStr = "create extended, sanboxed ArrayBuffer\nSet anything into this buffer arraybuffer, string,int8, uint8, int16, uint16, int32 or uint32\nat any BYTE position in that buffer\nExtract anything from the buffer from any BYTE position";
+		  console.log(testStr.length);
+		   sourceBuffer.setString(testStr, 10);							    // write string from at 10, to the length of the string
 		  console.log( new Uint8Array(sourceBuffer ) );
 
 				    // extract string --------------------------------------------------------------------------------------------

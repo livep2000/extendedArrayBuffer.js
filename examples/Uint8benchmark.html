@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html >
 <head>
     <title>Test extendeArrayBuffer.js</title>
     <script  src="../js/extendedArrayBuffer.js"></script>
@@ -10,9 +10,26 @@
     // Measuring time in Ms
     function start()
 	   {
-	   var s1 = new StopWatch();
-	   var size = 150 * 1024 * 1024;					   // 150 Mb
-	  
+	   console.log("All test is done with 20Mb data.")
+	   var size = 20 * 1024 * 1024;					   // 20 Mb
+	   
+	   var sourceBuffer = newExtendedArrayBuffer(size);	
+	   console.log("sample String created with " + size + " bytes");
+
+	   var str = "";
+	   for (var i = 0; i < size;i++) { str +="A"; }
+
+	   var s1 = new StopWatch(); s1.Start();        	   
+	   sourceBuffer.setString(str , 0);
+	   s1.Stop();
+	   console.log( "set string in " + s1.ElapsedMilliseconds + " Ms.");
+
+	   s1 = new StopWatch(); s1.Start(); 
+	   var newStr = sourceBuffer.getString(0, size);
+	   s1.Stop();
+	   console.log( "get string in " + s1.ElapsedMilliseconds + " Ms.");
+
+	   s1 = new StopWatch();	  
 	   var exampleBuffer = new Uint8Array(size);			   // Create some raw sampledata
 	   var i = 0;
 	   s1.Start(); 
@@ -22,9 +39,6 @@
 		  }
 	   s1.Stop();
 	   console.log( "Sample data " + size  + " bytes created in " + s1.ElapsedMilliseconds + " Ms.");
-
-
-	   var sourceBuffer = newExtendedArrayBuffer(size);		   // write test
 
 	   s1 = new StopWatch();
 	   s1.Start();        	   
@@ -50,13 +64,11 @@
 		  Uint32ExampleBuffer[i++] = 128+Math.round(127*Math.sin(i/200)) * 1024;
 		  }
 	  s1 = new StopWatch();
-	  console.log("Start writing to buffer....");
 	  s1.Start();        	   
 	  var bytesWritten = sourceBuffer.setUint32( Uint32ExampleBuffer , 0);	  
 	  s1.Stop();
 	  console.log( "Write Uint32 in " + s1.ElapsedMilliseconds + " Ms.");
 
-	  // tests
 	  s1 = new StopWatch(); s1.Start();        	   
 	  var destinationBuffer = sourceBuffer.getUint8( 0 , size ); 
 	  s1.Stop();
@@ -86,9 +98,7 @@
 	  var destinationBuffer = sourceBuffer.getInt32( 0 , size /4 ); 
 	  s1.Stop();
 	  console.log( "Read Int32 ready in " + s1.ElapsedMilliseconds + " Ms.");
-
-	   }
-
+    }
 
     StopWatch = function(){this.StartMilliseconds = 0;this.ElapsedMilliseconds = 0;}  
     StopWatch.prototype.Start = function(){this.StartMilliseconds = new Date().getTime();}
